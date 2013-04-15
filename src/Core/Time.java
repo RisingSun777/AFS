@@ -61,15 +61,7 @@ public class Time implements Runnable, KeyListener {
 	public void keyPressed(KeyEvent e) {
 		switch(e.getKeyCode()) {
 		case KeyEvent.VK_S:
-			isStart = !isStart;
-			if(isStart) {
-				mainframe.getSm().stopAll();
-				mainframe.getSm().play(mainframe.getSm().getTime(), 0, true);
-			}
-			else
-				stopSound();
-				//mainframe.getSm().getTime().fadeEnding();
-			new Thread(this).start();
+			startStop();
 			break;
 		case KeyEvent.VK_PAGE_UP:
 			if(!e.isShiftDown())
@@ -79,7 +71,7 @@ public class Time implements Runnable, KeyListener {
 				case "ĐỐI ĐẦU":
 					value = 45;
 					break;
-				case "BẢN LĨNH":
+				case "ĐẤU TRƯỜNG":
 					value = 45;
 					break;
 				case "MẬT MÃ CAESAR":
@@ -107,6 +99,41 @@ public class Time implements Runnable, KeyListener {
 			}
 			else
 				value = 0;
+			break;
+		}
+	}
+	
+	public void startStop() {
+		isStart = !isStart;
+		if(isStart) {
+			mainframe.getSm().stopAll();
+			mainframe.getSm().play(mainframe.getSm().getTime(), 0, true);
+		}
+		else
+			stopSound();
+			//mainframe.getSm().getTime().fadeEnding();
+		new Thread(this).start();
+	}
+	
+	public void resetToCurrentRound() {
+		switch(MainRound.current_round) {
+		case "ĐỐI ĐẦU":
+			value = 45;
+			break;
+		case "ĐẤU TRƯỜNG":
+			value = 45;
+			break;
+		case "MẬT MÃ CAESAR":
+			value = 300;
+			break;
+		case "THÔNG ĐIỆP":
+			value = 30;
+			break;
+		case "ONG XÂY TỔ":
+			value = 30;
+			break;
+		case "SỨC MẠNH Đ.ĐỘI":
+			value = 60;
 			break;
 		}
 	}

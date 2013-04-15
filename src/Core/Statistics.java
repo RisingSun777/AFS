@@ -17,9 +17,9 @@ public class Statistics implements Runnable {
 		defaultscoreposition = new Point(defaultposition.x + 220, defaultposition.y);
 		defaultdistance = 333;
 		
-		this.team_a = new Team(this, team_a, 0, defaultposition, defaultscoreposition);
-		this.team_b = new Team(this, team_b, 0, new Point(defaultposition.x + defaultdistance, defaultposition.y), new Point(defaultscoreposition.x + defaultdistance, defaultscoreposition.y));
-		this.team_c = new Team(this, team_c, 0, new Point(defaultposition.x + 2*defaultdistance, defaultposition.y), new Point(defaultscoreposition.x + 2*defaultdistance, defaultscoreposition.y));
+		this.team_a = new Team(this, team_a, 100, defaultposition, defaultscoreposition);
+		this.team_b = new Team(this, team_b, 100, new Point(defaultposition.x + defaultdistance, defaultposition.y), new Point(defaultscoreposition.x + defaultdistance, defaultscoreposition.y));
+		this.team_c = new Team(this, team_c, 100, new Point(defaultposition.x + 2*defaultdistance, defaultposition.y), new Point(defaultscoreposition.x + 2*defaultdistance, defaultscoreposition.y));
 	}
 	
 	public void run() {
@@ -88,6 +88,20 @@ public class Statistics implements Runnable {
 	/*
 	 * Add/subtract to/from team with index number.
 	 * */
+	public void setScoreToTeam(int value, int index) {
+		switch(index) {
+		case 0:
+			team_a.setScore(value);
+			break;
+		case 1:
+			team_b.setScore(value);
+			break;
+		case 2:
+			team_c.setScore(value);
+			break;
+		}
+	}
+	
 	public void score_modify(int index, String operator) {
 		if(index < 0 || index > 2)
 			return;
@@ -150,7 +164,8 @@ class Team {
 	}
 	
 	public void draw(Graphics2D g2d) {
-		Font a = new Font("Arial", Font.BOLD, 36);
+		//Font a = new Font("Arial", Font.BOLD, 36);
+		Font a = new Font("Arial Narrow", Font.PLAIN, 36);
 		Font b = new Font("Courier", Font.BOLD, 44);
 		
 		g2d.setFont(a);

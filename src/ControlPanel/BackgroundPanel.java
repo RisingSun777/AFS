@@ -5,8 +5,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class BackgroundPanel extends JPanel implements ActionListener {
-	public static final String[] backgroundlist_name = {"Main", "BanLinh", "Caesar", "ThongDiep", "ToOng", "MainScore", "Cover"};
-	public static final String[] roundnamelist_name = {"ĐỐI ĐẦU", "BẢN LĨNH", "MẬT MÃ CAESAR", "THÔNG ĐIỆP", "ONG XÂY TỔ", "SỨC MẠNH Đ.ĐỘI"};
+	public static final String[] backgroundlist_name = {"Main", "DauTruong", "Caesar", "ThongDiep", "ToOng", "MainScore", "Cover"};
+	public static final String[] roundnamelist_name = {"ĐỐI ĐẦU", "ĐẤU TRƯỜNG", "MẬT MÃ CAESAR", "THÔNG ĐIỆP", "ONG XÂY TỔ", "SỨC MẠNH Đ.ĐỘI", "HỢP LỰC"};
 	public final String background_action = "Background list";
 	public final String roundname_action = "Roundname list";
 	

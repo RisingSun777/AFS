@@ -36,6 +36,7 @@ public class ToOng implements Runnable, KeyListener {
 	
 	private boolean showNumbers = false;
 	private boolean hasNoMoreMoves = false;
+	private boolean isExtraTurn = false;
 	
 	public ToOng(Main mainframe) {
 		this.mainframe = mainframe;
@@ -120,6 +121,16 @@ public class ToOng implements Runnable, KeyListener {
 	}
 	
 	public void drawBoard(Graphics2D g2d) {
+		if(isExtraTurn) {
+			g2d.setFont(new Font("Arial", Font.BOLD, 36));
+			
+			g2d.setColor(Color.BLACK);
+			g2d.drawString("Extra moves chance!", 203, 93);
+			
+			g2d.setColor(Color.YELLOW);
+			g2d.drawString("Extra moves chance!", 200, 90);
+		}
+		
 		int counter = 1;
 		g2d.translate(1024/2 - 50, 768/8 + 80);
 		for(int i = 0; i < board.size(); i++)
@@ -148,11 +159,7 @@ public class ToOng implements Runnable, KeyListener {
 		
 		g2d.setTransform(new AffineTransform());
 		
-		g2d.setColor(Color.WHITE);
-		g2d.setFont(new Font("Arial", Font.PLAIN, 12));
-		g2d.drawString("Current position: (" + getCurrentpiece().x + ", " + getCurrentpiece().y + ")", 100, 500);
-		g2d.drawString("Current turn: " + currentplayer, 100, 530);
-		g2d.drawString("Number of moves: " + moves, 100, 560);
+		//drawLogState(g2d);
 		
 		
 		//g2d.drawString("HasNoMoreMoves: " + hasNoMoreMoves, 100, 620);
@@ -252,6 +259,14 @@ public class ToOng implements Runnable, KeyListener {
 			temp_point.y++;
 		Piece temp_piece = new Piece(this, temp_xpoints, temp_ypoints, temp_point);
 		temp_piecelist.add(temp_piece);
+	}
+	
+	private void drawLogState(Graphics2D g2d) {
+		g2d.setColor(Color.WHITE);
+		g2d.setFont(new Font("Arial", Font.PLAIN, 12));
+		g2d.drawString("Current position: (" + getCurrentpiece().x + ", " + getCurrentpiece().y + ")", 100, 500);
+		g2d.drawString("Current turn: " + currentplayer, 100, 530);
+		g2d.drawString("Number of moves: " + moves, 100, 560);
 	}
 	
 	public Point getCurrentpiece() {
@@ -412,6 +427,8 @@ public class ToOng implements Runnable, KeyListener {
 			showNumbers = !showNumbers;
 			break;
 		case KeyEvent.VK_M:
+			isExtraTurn = false;
+			incrementCurrentQuestion();
 			updateMovesAndTurns();
 			break;
 		}
@@ -419,11 +436,23 @@ public class ToOng implements Runnable, KeyListener {
 	public void keyReleased(KeyEvent e) {}
 	public void keyTyped(KeyEvent e) {}
 	
+	private void incrementCurrentQuestion() {
+		MainRound.current_question++;
+		if(MainRound.current_question > MainRound.current_list.size())
+			MainRound.current_question = MainRound.current_list.size();
+		QuestionSet.setQuestionvisible(false);
+		QuestionSet.setSolutionvisible(false);
+	}
+	
 	private void updateMovesAndTurns() {
-		moves++;
-		if(moves % 4 == 0) {
-			turns++;
-			currentplayer = PieceStatus.TEAM_C;
+		if(!isExtraTurn) {
+			moves++;
+			if(moves % 4 == 0) {
+				turns++;
+				currentplayer = PieceStatus.TEAM_A;
+			}
+			if(moves % 4 == 3)
+				isExtraTurn = true;
 		}
 	}
 }

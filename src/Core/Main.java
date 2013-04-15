@@ -30,7 +30,7 @@ public class Main extends JFrame implements KeyListener {
 	private MainRound mainround;
 	private ToOng toong;
 	private Caesar caesar;
-	private BanLinh banlinh;
+	private DauTruong dautruong;
 	private ThongDiep thongdiep;
 	
 	public Main() {
@@ -54,7 +54,7 @@ public class Main extends JFrame implements KeyListener {
 		updateKeyListener(mainround);
 		toong = new ToOng(this);
 		caesar = new Caesar();
-		banlinh = new BanLinh();
+		dautruong = new DauTruong();
 		thongdiep = new ThongDiep();
 		
 		sm.play(sm.getMain_theme(), Clip.LOOP_CONTINUOUSLY, true);
@@ -84,8 +84,8 @@ public class Main extends JFrame implements KeyListener {
 		case "Caesar":
 			caesar.draw(g2d);
 			break;
-		case "BanLinh":
-			banlinh.draw(g2d);
+		case "DauTruong":
+			dautruong.draw(g2d);
 			break;
 		case "ThongDiep":
 			thongdiep.draw(g2d);
@@ -106,8 +106,8 @@ public class Main extends JFrame implements KeyListener {
 		case "Main":
 			updateKeyListener(mainround);
 			break;
-		case "BanLinh":
-			updateKeyListener(banlinh);
+		case "DauTruong":
+			updateKeyListener(dautruong);
 			break;
 		case "Caesar":
 			//This round does not have KeyListener
@@ -134,8 +134,8 @@ public class Main extends JFrame implements KeyListener {
 		case "ĐỐI ĐẦU":
 			MainRound.current_list = rm.getDoidau();
 			break;
-		case "BẢN LĨNH":
-			//MainRound.current_list = rm.get();
+		case "ĐẤU TRƯỜNG":
+			MainRound.current_list = rm.getDautruong();
 			break;
 		case "MẬT MÃ CAESAR":
 			//This round does not have KeyListener
@@ -144,9 +144,13 @@ public class Main extends JFrame implements KeyListener {
 			MainRound.current_list = rm.getThongdiep();
 			break;
 		case "ONG XÂY TỔ":
+			MainRound.current_list = rm.getOngxayto();
 			break;
 		case "SỨC MẠNH Đ.ĐỘI":
 			MainRound.current_list = rm.getSucmanh();
+			break;
+		case "HỢP LỰC":
+			MainRound.current_list = rm.getHopluc();
 			break;
 		}
 		MainRound.current_question = 1;
@@ -187,7 +191,7 @@ public class Main extends JFrame implements KeyListener {
                 //dispose() is the reason that this trick doesn't work with videos
                 setUndecorated(true);
 
-                setBounds(-10,-100,getToolkit().getScreenSize().width+30,getToolkit().getScreenSize().height+110);
+                //setBounds(-10,-100,getToolkit().getScreenSize().width+30,getToolkit().getScreenSize().height+110);
                 setVisible(true);
                 isfullscreen = true;
 			}
@@ -218,11 +222,11 @@ public class Main extends JFrame implements KeyListener {
 		case KeyEvent.VK_F2:
 			//JOptionPane.showMessageDialog(this,"F2 was pressed");
 			if(e.isShiftDown()) {
-				updateKeyListener(banlinh);
-				rm.setCurrentbackground("BanLinh");
+				updateKeyListener(dautruong);
+				rm.setCurrentbackground("DauTruong");
 			}
 			else {
-				MainRound.current_round = "BẢN LĨNH";
+				MainRound.current_round = "ĐẤU TRƯỜNG";
 				MainRound.current_question = 1;
 				QuestionSet.setQuestionvisible(false);
 				QuestionSet.setSolutionvisible(false);
@@ -335,6 +339,20 @@ public class Main extends JFrame implements KeyListener {
 	 */
 	public MainRound getMainround() {
 		return mainround;
+	}
+
+	/**
+	 * @return the time
+	 */
+	public Time getTime() {
+		return time;
+	}
+
+	/**
+	 * @return the rm
+	 */
+	public ResourceManager getRm() {
+		return rm;
 	}
 
 	public static void main(String[] args) {

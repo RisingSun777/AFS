@@ -1,6 +1,5 @@
 package ControlPanel;
 
-import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
@@ -20,6 +19,12 @@ public class QuestionManipulator extends JPanel implements ActionListener {
 	
 	private JButton showhidequestion;
 	private JButton showhidesolution;
+	
+	private final String[] match_list_data = {"1", "2", "3"};
+	private JComboBox<String> match_list;
+	private JButton match_load_button;
+	private final String match_load_button_string = "Load match";
+	private JLabel match_load_label;
 	
 	public QuestionManipulator(ControlPanel controlpanel) {
 		this.controlpanel = controlpanel;
@@ -46,12 +51,22 @@ public class QuestionManipulator extends JPanel implements ActionListener {
 		showhidesolution.setActionCommand(showhidesolution.getText());
 		showhidesolution.addActionListener(this);
 		
+		match_list = new JComboBox(match_list_data);
+		match_list.setSelectedIndex(0);
+		match_load_button = new JButton(match_load_button_string);
+		match_load_button.setActionCommand(match_load_button_string);
+		match_load_button.addActionListener(this);
+		match_load_label = new JLabel("Match loader: ");
+		
 		add(currentquestion_label);
 		add(prevquestion);
 		add(currentquestion);
 		add(nextquestion);
 		add(showhidequestion);
 		add(showhidesolution);
+		add(match_load_label);
+		add(match_list);
+		add(match_load_button);
 	}
 	
 	public void update() {
@@ -85,6 +100,9 @@ public class QuestionManipulator extends JPanel implements ActionListener {
 			break;
 		case shs:
 			controlpanel.getMainframe().getMainround().showHideSolution();
+			break;
+		case match_load_button_string:
+			controlpanel.getMainframe().getRm().loadMatch((String) match_list.getSelectedItem());
 			break;
 		}
 	}

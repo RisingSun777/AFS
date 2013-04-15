@@ -4,6 +4,7 @@ import java.awt.Toolkit;
 import java.awt.event.*;
 
 import javax.swing.*;
+import javax.swing.event.*;
 
 public class ScorePanel extends JPanel {
 	ControlPanel controlpanel;
@@ -11,11 +12,16 @@ public class ScorePanel extends JPanel {
 	private TeamScore b;
 	private TeamScore c;
 	
+	private JCheckBox autoUpdateBox;
+	
 	public ScorePanel(ControlPanel parent) {
 		this.controlpanel = parent;
 		a = new TeamScore(TeamNamesPanel.a_string, this);
 		b = new TeamScore(TeamNamesPanel.b_string, this);
 		c = new TeamScore(TeamNamesPanel.c_string, this);
+		
+		autoUpdateBox = new JCheckBox("Auto update score", true);
+		add(autoUpdateBox);
 		
 		this.setBorder(
                 BorderFactory.createCompoundBorder(
@@ -24,15 +30,24 @@ public class ScorePanel extends JPanel {
 	}
 	
 	public void update() {
-		int[] temp = controlpanel.getStatistics().getTeamsScores();
-		
-		a.score_value.setText("" + temp[0]);
-		b.score_value.setText("" + temp[1]);
-		c.score_value.setText("" + temp[2]);
+		if(autoUpdateBox.isSelected()) {
+			int[] temp = controlpanel.getStatistics().getTeamsScores();
+			
+			a.score_value.setText("" + temp[0]);
+			b.score_value.setText("" + temp[1]);
+			c.score_value.setText("" + temp[2]);
+		}
+	}
+
+	/**
+	 * @return the autoUpdateBox
+	 */
+	public JCheckBox getAutoUpdateBox() {
+		return autoUpdateBox;
 	}
 }
 
-class TeamScore implements ActionListener {
+class TeamScore implements ActionListener, DocumentListener {
 	ScorePanel scorepanel;
 	final String name;
 	JLabel label;
@@ -71,6 +86,32 @@ class TeamScore implements ActionListener {
 		}
 		
 		scorepanel.update();
+	}
+	
+	public void changedUpdate(DocumentEvent e) {}
+	
+	public void insertUpdate(DocumentEvent e) {
+		updateScoresFromField();
+	}
+	
+	public void removeUpdate(DocumentEvent e) {}
+	
+	private void updateScoresFromField() {
+		if(!scorepanel.getAutoUpdateBox().isSelected()) {
+			int val = Integer.parseInt(score_value.getText());
+			
+			switch(name) {
+			case TeamNamesPanel.a_string:
+				scorepanel.controlpanel.getStatistics().setScoreToTeam(val, 0);
+				break;
+			case TeamNamesPanel.b_string:
+				scorepanel.controlpanel.getStatistics().setScoreToTeam(val, 1);
+				break;
+			case TeamNamesPanel.c_string:
+				scorepanel.controlpanel.getStatistics().setScoreToTeam(val, 2);
+				break;
+			}
+		}
 	}
 	
 	private void addScore() {

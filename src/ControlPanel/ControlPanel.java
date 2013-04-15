@@ -5,8 +5,7 @@ import javax.swing.*;
 import Core.Main;
 import Core.Statistics;
 
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.awt.event.*;
 
 public class ControlPanel extends JPanel implements ActionListener, Runnable {
@@ -17,8 +16,10 @@ public class ControlPanel extends JPanel implements ActionListener, Runnable {
 	private ScorePanel score_panel;
 	private BackgroundPanel background_panel;
 	private QuestionManipulator question_panel;
+	private TimeManip time_panel;
 	
 	public ControlPanel(Statistics statistics, Main mainframe) {
+		this.setLayout(new GridLayout(3, 2));
 		JFrame frame = new JFrame("AFS 2013 - Control panel");
     	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	frame.setPreferredSize(new Dimension(this.getMaximumSize().width, Core.Main.screenheight / 2));
@@ -34,6 +35,8 @@ public class ControlPanel extends JPanel implements ActionListener, Runnable {
 		add(background_panel);
 		question_panel = new QuestionManipulator(this);
 		add(question_panel);
+		time_panel = new TimeManip(mainframe.getTime());
+		add(time_panel);
     	
 		frame.add(this);
     	frame.pack();
