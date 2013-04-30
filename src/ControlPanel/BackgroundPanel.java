@@ -15,6 +15,7 @@ public class BackgroundPanel extends JPanel implements ActionListener {
 	private JComboBox<String> roundnamelist;
 	private JButton backgroundbutton;
 	private JButton roundnamebutton;
+	private JCheckBox playclip;
 	
 	public BackgroundPanel(ControlPanel controlpanel) {
 		this.controlpanel = controlpanel;
@@ -42,8 +43,35 @@ public class BackgroundPanel extends JPanel implements ActionListener {
 		roundnamebutton.setActionCommand(roundname_action);
 		roundnamebutton.addActionListener(this);
 		
+		playclip = new JCheckBox("Play rule clips");
+		playclip.setSelected(true);
+		
 		add(backgroundlist); add(backgroundbutton);
 		add(roundnamelist); add(roundnamebutton);
+		add(playclip);
+	}
+	
+	private void playClip() {
+		controlpanel.getMainframe().getSm().stopAll();
+		
+		switch((String) roundnamelist.getSelectedItem()) {
+		case "ĐỐI ĐẦU":
+			VideoManager.VideoMain.location_current = VideoManager.VideoMain.location_doidau;
+			break;
+		case "ONG XÂY TỔ":
+			VideoManager.VideoMain.location_current = VideoManager.VideoMain.location_ongxayto;
+			break;
+		case "HỢP LỰC":
+			VideoManager.VideoMain.location_current = VideoManager.VideoMain.location_hopluc;
+			break;
+		case "ĐẤU TRƯỜNG":
+			VideoManager.VideoMain.location_current = VideoManager.VideoMain.location_dautruong;
+			break;
+		}
+		//VideoManager.VideoMain aaa = new VideoManager.VideoMain();
+		//aaa.test();
+		VideoManager.VideoMain.wakeUp();
+		new Thread((new VideoManager.VideoMain())).start();
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -52,6 +80,8 @@ public class BackgroundPanel extends JPanel implements ActionListener {
 			controlpanel.getMainframe().updateBackground((String) backgroundlist.getSelectedItem());
 			break;
 		case roundname_action:
+			if(playclip.isSelected())
+				playClip();
 			controlpanel.getMainframe().updateRoundName((String) roundnamelist.getSelectedItem());
 			break;
 		}

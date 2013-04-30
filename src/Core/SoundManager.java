@@ -1,7 +1,7 @@
 package Core;
 
 import java.io.File;
-
+import java.util.ArrayList;
 import javax.sound.sampled.*;
 
 public class SoundManager {
@@ -10,11 +10,60 @@ public class SoundManager {
 	private Sound time;
 	private Sound score_summary;
 	
+	private ArrayList<Sound> system_sounds;
+	private ArrayList<Sound> ongxayto_sounds;
+	private ArrayList<Sound> doidau_sounds;
+	private ArrayList<Sound> thongdiep_sounds;
+	private ArrayList<Sound> matma_sounds;
+	private ArrayList<Sound> hopluc_sounds;
+	private ArrayList<Sound> dautruong_sounds;
+	
 	public SoundManager() {
 		answer = new Sound("answer.wav");
 		main_theme = new Sound("main_theme.wav");
 		time = new Sound("time_count.wav");
 		score_summary = new Sound("summary.wav");
+		
+		initSoundLists();
+	}
+	
+	private void initSoundLists() {
+		system_sounds = new ArrayList<Sound>();
+		ongxayto_sounds = new ArrayList<Sound>();
+		doidau_sounds = new ArrayList<Sound>();
+		thongdiep_sounds = new ArrayList<Sound>();
+		matma_sounds = new ArrayList<Sound>();
+		hopluc_sounds = new ArrayList<Sound>();
+		dautruong_sounds = new ArrayList<Sound>();
+		
+		system_sounds.add(new Sound("0_Bang diem.wav"));
+		system_sounds.add(new Sound("0_Tra loi dung.wav"));
+		system_sounds.add(new Sound("0_Tra loi sai.wav"));
+		
+		ongxayto_sounds.add(new Sound("1_Ong xay to_An quan co.wav"));
+		ongxayto_sounds.add(new Sound("1_Ong xay to_Chien thang tuyet doi.wav"));
+		ongxayto_sounds.add(new Sound("1_Ong xay to_Doc cau hoi.wav"));
+		ongxayto_sounds.add(new Sound("1_Ong xay to_Suy nghi.wav"));
+		
+		doidau_sounds.add(new Sound("2_Doi dau_Doc cau hoi.wav"));
+		doidau_sounds.add(new Sound("2_Doi dau_Suy nghi.wav"));
+		
+		thongdiep_sounds.add(new Sound("3_Thong diep_Chien thang tuyet doi.wav"));
+		thongdiep_sounds.add(new Sound("3_Thong diep_Doc cau hoi.wav"));
+		thongdiep_sounds.add(new Sound("3_Thong diep_Doi o chu.wav"));
+		thongdiep_sounds.add(new Sound("3_Thong diep_Mo o.wav"));
+		thongdiep_sounds.add(new Sound("3_Thong diep_Show bang chon.wav"));
+		thongdiep_sounds.add(new Sound("3_Thong diep_Suy nghi.wav"));
+		
+		matma_sounds.add(new Sound("4_Mat ma.wav"));
+		
+		hopluc_sounds.add(new Sound("5_Hop luc.wav"));
+		
+		dautruong_sounds.add(new Sound("6_Dau truong_10s chon phuong an.wav"));
+		dautruong_sounds.add(new Sound("6_Dau truong_30s suy nghi.wav"));
+		dautruong_sounds.add(new Sound("6_Dau truong_45s suy nghi.wav"));
+		dautruong_sounds.add(new Sound("6_Dau truong_75s suy nghi.wav"));
+		dautruong_sounds.add(new Sound("6_Dau truong_Doc cau hoi.wav"));
 	}
 	
 	/**
@@ -93,10 +142,11 @@ public class SoundManager {
 		this.score_summary = score_summary;
 	}
 }
-class Sound implements Runnable {
+class Sound {
 	public static final String filename_prefix = "./!RES/Sounds/";
 	AudioInputStream stream;
 	Clip clip;
+	String name;
 	
 	FloatControl volume;
 	float default_volume;
@@ -109,26 +159,12 @@ class Sound implements Runnable {
 			
 			volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 			default_volume = volume.getValue();
+			
+			name = filename;
 		} catch(Exception e) {e.printStackTrace(); }
 	}
 	
-	/**
-	 * For fade ending effect
-	 * */
-	public void run() {
-		float minimum_volume = volume.getMinimum();
-		float current_volume = volume.getValue();
-		for(float i = current_volume; i > minimum_volume; i -= 5f) {
-			volume.setValue(i);
-			try {
-				Thread.sleep(30);
-			} catch(InterruptedException e) {e.printStackTrace(); }
-		}
-		
-		clip.stop();
-	}
-	
-	public void fadeEnding() {
-		new Thread(this).start();
+	public String toString() {
+		return name;
 	}
 }

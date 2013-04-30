@@ -148,7 +148,7 @@ public class ResourceManager implements Runnable {
 	}
 
 	public void drawBackground(Graphics2D g2d) {
-		if(currentbackground == "")
+		if(currentbackground == "" || backgroundlist == null)
 			return;
 		g2d.drawImage(backgroundlist.get(currentbackground), 0, 0, mainframe);
 		mainframe.repaint();

@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class ControlPanel extends JPanel implements ActionListener, Runnable {
+	public static final int preferredWidth = 1300;
 	private Main mainframe;
 	private Statistics statistics;
 
@@ -22,7 +23,7 @@ public class ControlPanel extends JPanel implements ActionListener, Runnable {
 		this.setLayout(new GridLayout(3, 2));
 		JFrame frame = new JFrame("AFS 2013 - Control panel");
     	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    	frame.setPreferredSize(new Dimension(this.getMaximumSize().width, Core.Main.screenheight / 2));
+    	frame.setPreferredSize(new Dimension(preferredWidth, Core.Main.screenheight / 2));
     	
     	this.statistics = statistics;
     	this.mainframe = mainframe;

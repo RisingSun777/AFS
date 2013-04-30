@@ -1,4 +1,6 @@
 package Core;
+import javafx.stage.Stage;
+
 import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
@@ -6,6 +8,7 @@ import java.awt.event.*;
 import java.awt.image.*;
 import ContestRounds.*;
 import ControlPanel.ControlPanel;
+import VideoManager.VideoMain;
 
 public class Main extends JFrame implements KeyListener {
 	private static final long serialVersionUID = 1L;
@@ -23,6 +26,7 @@ public class Main extends JFrame implements KeyListener {
 	private KeyListener currentkeylistener = null;
 	private SoundManager sm;
 	private ControlPanel controlpanel;
+	private VideoMain videomain;
 	
 	public Toolkit toolkit = Toolkit.getDefaultToolkit();
 	
@@ -39,6 +43,8 @@ public class Main extends JFrame implements KeyListener {
 		this.setVisible(true);
 		addKeyListener(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		videomain = new VideoMain();
 		
 		rm = new ResourceManager();
 		rm.setMainframe(this);
@@ -165,14 +171,18 @@ public class Main extends JFrame implements KeyListener {
 		currentkeylistener = a;
 	}
 	
+	public void playMainTheme() {
+		if(!sm.getMain_theme().clip.isRunning())
+			sm.play(sm.getMain_theme(), Clip.LOOP_CONTINUOUSLY, true);
+	}
+	
 	public void keyPressed(KeyEvent e) {
 		switch(e.getKeyCode()) {
 		case KeyEvent.VK_END:
 			if(e.isShiftDown())
 				sm.stopAll();
 			else
-				if(!sm.getMain_theme().clip.isRunning())
-					sm.play(sm.getMain_theme(), Clip.LOOP_CONTINUOUSLY, true);
+				playMainTheme();
 			break;
 		case KeyEvent.VK_ESCAPE:
 			WindowEvent wev = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
@@ -310,6 +320,9 @@ public class Main extends JFrame implements KeyListener {
 			if(e.isShiftDown())
 				new Thread(statistics).start();
 			break;
+		case KeyEvent.VK_H:
+			//new Stage().show();
+			break;
 		}
 	}
 	public void keyReleased(KeyEvent e) {}
@@ -353,6 +366,13 @@ public class Main extends JFrame implements KeyListener {
 	 */
 	public ResourceManager getRm() {
 		return rm;
+	}
+
+	/**
+	 * @return the videomain
+	 */
+	public VideoMain getVideomain() {
+		return videomain;
 	}
 
 	public static void main(String[] args) {

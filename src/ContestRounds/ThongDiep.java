@@ -22,17 +22,17 @@ public class ThongDiep implements Runnable, KeyListener {
 		board = new ArrayList<ArrayList<Cell>>();
 		selection = new Point(0, 0);
 		card = Toolkit.getDefaultToolkit().getImage("./!RES/Card.png");
-		teama = new Team(new Color(1, 0, 1, 0.3f));
-		teamb = new Team(new Color(0, 1, 0, 0.3f));
-		teamc = new Team(new Color(0, 0, 1, 0.3f));
+		teama = new Team(new Color(1, 1, 0, 0.5f));
+		teamb = new Team(new Color(0, 1, 0, 0.5f));
+		teamc = new Team(new Color(0, 0, 1, 0.5f));
 		
 		charset = new Charset[11];
-		charset[0] = new Charset("S3", 1);
-		charset[1] = new Charset("FS", 1);
+		charset[0] = new Charset("A3", 1);
+		charset[1] = new Charset("F2", 1);
 		charset[2] = new Charset("01", 1);
 		charset[3] = new Charset("A", 6);
-		charset[4] = new Charset("F", 4);
-		charset[5] = new Charset("S", 4);
+		charset[4] = new Charset("F", 5);
+		charset[5] = new Charset("S", 3);
 		charset[6] = new Charset("2", 6);
 		charset[7] = new Charset("0", 5);
 		charset[8] = new Charset("1", 4);
@@ -89,25 +89,12 @@ public class ThongDiep implements Runnable, KeyListener {
 				board.get(i).get(j).draw(g2d);
 			}
 		
-		teama.drawCharsObtained(g2d, 350, 110);
-		teamb.drawCharsObtained(g2d, 350, 140);
-		teamc.drawCharsObtained(g2d, 350, 170);
+		teama.drawCharsObtained(g2d, 300, 110);
+		teamb.drawCharsObtained(g2d, 300, 145);
+		teamc.drawCharsObtained(g2d, 300, 180);
 	}
 	
 	public void run() {
-		//for moving cards only
-		/*int temp = board.get(selection.x).get(selection.y).card_coordinate.y;
-		if(board.get(selection.x).get(selection.y).isVisible) {
-			for(int i = temp; i >= Cell.notVisibleY; i -= 5) {
-				board.get(selection.x).get(selection.y).card_coordinate.y = i;
-			}
-		}
-		else {
-			for(int i = temp; i <= Cell.visibleY; i += 5) {
-				board.get(selection.x).get(selection.y).card_coordinate.y = i;
-			}
-		}*/
-		
 			if(swapmode) {
 				Scanner scanner = new Scanner(System.in);
 				System.out.println("\n--- Swap mode ---");
@@ -163,9 +150,6 @@ public class ThongDiep implements Runnable, KeyListener {
 	 * Swap character between 2 teams. Return true if success, false otherwise.
 	 * */
 	public boolean swapCharset(Team src_t, Team dst_t, String src_s, String dst_s) {
-		//System.out.println("src_s = " + src_s);
-		//System.out.println("dst_s = " + dst_s);
-		
 		if(src_t == null || dst_t == null)
 			return false;
 		if(!src_t.chars_obtained.contains(src_s) || !dst_t.chars_obtained.contains(dst_s) || src_t == dst_t)
@@ -200,8 +184,6 @@ public class ThongDiep implements Runnable, KeyListener {
 				selection.y = noOfCols - 1;
 			break;
 		case KeyEvent.VK_ENTER:
-			//board.get(selection.x).get(selection.y).isVisible = !board.get(selection.x).get(selection.y).isVisible;
-			//new Thread(this).start();
 			board.get(selection.x).get(selection.y).isVisible = false;
 			board.get(selection.x).get(selection.y).claimed = null;
 			break;
@@ -214,9 +196,7 @@ public class ThongDiep implements Runnable, KeyListener {
 		case KeyEvent.VK_1:
 			if(!e.isAltDown()) {
 				if(e.isShiftDown() == false && e.isControlDown() == false) {
-					board.get(selection.x).get(selection.y).isVisible = true;
-					board.get(selection.x).get(selection.y).claimed = teama.color;
-					teama.chars_obtained.add(board.get(selection.x).get(selection.y).value);
+					addCharToTeam(teama);
 				}
 			}
 			else {
@@ -227,9 +207,7 @@ public class ThongDiep implements Runnable, KeyListener {
 		case KeyEvent.VK_2:
 			if(!e.isAltDown()) {
 				if(e.isShiftDown() == false && e.isControlDown() == false) {
-					board.get(selection.x).get(selection.y).isVisible = true;
-					board.get(selection.x).get(selection.y).claimed = teamb.color;
-					teamb.chars_obtained.add(board.get(selection.x).get(selection.y).value);
+					addCharToTeam(teamb);
 				}
 			}
 			else {
@@ -240,9 +218,7 @@ public class ThongDiep implements Runnable, KeyListener {
 		case KeyEvent.VK_3:
 			if(!e.isAltDown()) {
 				if(e.isShiftDown() == false && e.isControlDown() == false) {
-					board.get(selection.x).get(selection.y).isVisible = true;
-					board.get(selection.x).get(selection.y).claimed = teamc.color;
-					teamc.chars_obtained.add(board.get(selection.x).get(selection.y).value);
+					addCharToTeam(teamc);
 				}
 			}
 			else {
@@ -258,31 +234,29 @@ public class ThongDiep implements Runnable, KeyListener {
 	}
 	public void keyTyped(KeyEvent e) {}
 	public void keyReleased(KeyEvent e) {}
+	
+	private void addCharToTeam(Team team) {
+		board.get(selection.x).get(selection.y).isVisible = true;
+		board.get(selection.x).get(selection.y).claimed = team.color;
+		if(board.get(selection.x).get(selection.y).value.length() == 1)
+			team.chars_obtained.add(board.get(selection.x).get(selection.y).value);
+		else {
+			for(int i = 0; i < board.get(selection.x).get(selection.y).value.length(); i++) {
+				Character temp = board.get(selection.x).get(selection.y).value.charAt(i);
+				team.chars_obtained.add(temp.toString());
+			}
+		}
+	}
 
-	/**
-	 * @return the selection
-	 */
 	public Point getSelection() {
 		return selection;
 	}
-
-	/**
-	 * @param selection the selection to set
-	 */
 	public void setSelection(Point selection) {
 		this.selection = selection;
 	}
-
-	/**
-	 * @return the card
-	 */
 	public Image getCard() {
 		return card;
 	}
-
-	/**
-	 * @param card the card to set
-	 */
 	public void setCard(Image card) {
 		this.card = card;
 	}
@@ -299,12 +273,15 @@ class Team {
 	
 	public void drawCharsObtained(Graphics2D g2d, int x, int y) {
 		Color temp_color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 200);
+		Rectangle temp_rect = new Rectangle(x, y, 30, 30);
+				
 		g2d.setColor(temp_color);
-		g2d.fillRect(x, y, 25, 25);
-		g2d.setFont(new Font("Arial", Font.BOLD, 25));
+		g2d.fill(temp_rect);
+
+		g2d.setFont(new Font("Arial", Font.BOLD, 40));
 		g2d.setColor(Color.WHITE);
 		for(int i = 0; i < chars_obtained.size(); i++)
-			g2d.drawString(chars_obtained.get(i), x + 40*i + 40, y + 20);
+			g2d.drawString(chars_obtained.get(i), x + 50*i + 50, y + 30);
 	}
 	
 	public void printCharsObtained() {

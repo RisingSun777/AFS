@@ -72,7 +72,12 @@ public class Time implements Runnable, KeyListener {
 					value = 45;
 					break;
 				case "ĐẤU TRƯỜNG":
-					value = 45;
+					if(MainRound.current_question > 8)
+						value = 60;
+					else if(MainRound.current_question > 4)
+						value = 45;
+					else
+						value = 30;
 					break;
 				case "MẬT MÃ CAESAR":
 					value = 300;
@@ -81,13 +86,16 @@ public class Time implements Runnable, KeyListener {
 					value = 30;
 					break;
 				case "ONG XÂY TỔ":
-					value = 30;
+					value = 15;
 					break;
 				case "SỨC MẠNH Đ.ĐỘI":
 					if(e.isControlDown())
 						value = 10;
 					else
 						value = 60;
+					break;
+				case "HỢP LỰC":
+					value = 60*15;
 					break;
 				}
 			break;
@@ -107,7 +115,7 @@ public class Time implements Runnable, KeyListener {
 		isStart = !isStart;
 		if(isStart) {
 			mainframe.getSm().stopAll();
-			mainframe.getSm().play(mainframe.getSm().getTime(), 0, true);
+			mainframe.getSm().play(mainframe.getSm().getTime(), Clip.LOOP_CONTINUOUSLY, true);
 		}
 		else
 			stopSound();
@@ -121,7 +129,12 @@ public class Time implements Runnable, KeyListener {
 			value = 45;
 			break;
 		case "ĐẤU TRƯỜNG":
-			value = 45;
+			if(MainRound.current_question > 8)
+				value = 75;
+			else if(MainRound.current_question > 4)
+				value = 45;
+			else
+				value = 30;
 			break;
 		case "MẬT MÃ CAESAR":
 			value = 300;
@@ -130,10 +143,13 @@ public class Time implements Runnable, KeyListener {
 			value = 30;
 			break;
 		case "ONG XÂY TỔ":
-			value = 30;
+			value = 15;
 			break;
 		case "SỨC MẠNH Đ.ĐỘI":
 			value = 60;
+			break;
+		case "HỢP LỰC":
+			value = 60*15;
 			break;
 		}
 	}

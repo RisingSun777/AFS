@@ -31,7 +31,7 @@ public class ToOng implements Runnable, KeyListener {
 	//Game statistics
 	private Statistics statistics;
 	
-	private int turns = 0;
+	private int turns = 1;
 	private int moves = 0;
 	
 	private boolean showNumbers = false;
@@ -303,6 +303,10 @@ public class ToOng implements Runnable, KeyListener {
 
 	public void keyPressed(KeyEvent e) {
 		switch(e.getKeyCode()) {
+		/*case KeyEvent.VK_Z:
+			if(e.isControlDown())
+				board = (ArrayList<ArrayList<Piece>>) backup.backup_board.clone();
+			break;*/
 		case KeyEvent.VK_UP:
 			currentpiece.x -= 1;
 			if(currentpiece.x < 0)
@@ -374,7 +378,7 @@ public class ToOng implements Runnable, KeyListener {
 			initPlayerPieces(new Point(6, 0), PieceStatus.TEAM_B);
 			initPlayerPieces(new Point(6, 6), PieceStatus.TEAM_C);
 			moves = 0;
-			turns = 0;
+			turns = 1;
 			break;
 		case KeyEvent.VK_1:
 			board.get(currentpiece.x).get(currentpiece.y).setStatus(PieceStatus.TEAM_A);
@@ -427,8 +431,10 @@ public class ToOng implements Runnable, KeyListener {
 			showNumbers = !showNumbers;
 			break;
 		case KeyEvent.VK_M:
-			isExtraTurn = false;
-			incrementCurrentQuestion();
+			if(isExtraTurn) {
+				isExtraTurn = false;
+				incrementCurrentQuestion();
+			} //new update
 			updateMovesAndTurns();
 			break;
 		}
@@ -448,6 +454,7 @@ public class ToOng implements Runnable, KeyListener {
 		if(!isExtraTurn) {
 			moves++;
 			if(moves % 4 == 0) {
+				//backupState();
 				turns++;
 				currentplayer = PieceStatus.TEAM_A;
 			}
@@ -455,6 +462,12 @@ public class ToOng implements Runnable, KeyListener {
 				isExtraTurn = true;
 		}
 	}
+	
+	/*private void backupState() {
+		backup.backup_board = (ArrayList<ArrayList<Piece>>) board.clone(); //save state for undo
+		backup.turns = turns;
+		backup.moves = moves;
+	}*/
 }
 
 class Piece {
@@ -479,7 +492,7 @@ class Piece {
 	
 	public void drawPiece(Graphics2D g2d) {
 		//draw the border
-		g2d.setColor(Color.YELLOW);
+		g2d.setColor(Color.WHITE);
 		g2d.setStroke(new BasicStroke(3f));
 		g2d.draw(shape);
 		
@@ -487,7 +500,7 @@ class Piece {
 		if(toong.getCurrentpiece().x == coordinate.x && toong.getCurrentpiece().y == coordinate.y) {
 			switch(toong.getCurrentplayer()) {
 			case TEAM_A:
-				g2d.setPaint(new Color(1.0f, 0, 1.0f, 0.3f));
+				g2d.setPaint(new Color(1.0f, 1.0f, 0, 0.3f));
 				break;
 			case TEAM_B:
 				g2d.setPaint(new Color(0, 1.0f, 0, 0.3f));
